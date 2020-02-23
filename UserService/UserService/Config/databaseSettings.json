@@ -1,0 +1,5 @@
+{
+  "DatabaseConfig": {
+    "ConnectionString": "Server=localhost;Port=3306;Database=userdata;Uid=Akhil;Pwd=Burningthunder1!;"
+  }
+}
