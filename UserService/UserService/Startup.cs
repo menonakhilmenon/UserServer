@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using JwtHelpers;
 using UserService.DataAccess;
+using UserService.DataAccess.CharacterManagement;
 
 namespace UserService
 {
@@ -74,7 +75,10 @@ namespace UserService
             services.AddSingleton(Configuration.GetSection("DatabaseConfig").Get<DatabaseConfig>());
             services.AddSingleton<IGetCharacterData, DatabaseCharacterAccesor>();
             services.AddSingleton<ISetCharacterData, DatabaseCharacterAccesor>();
-            services.AddSingleton<ActiveCharacterManager>();
+            services.AddSingleton<CharacterCache>();
+            services.AddSingleton<CharacterSessionManager>();
+            services.AddSingleton<CharacterModerationManager>();
+            services.AddSingleton<EventManager>();
         }
 
 

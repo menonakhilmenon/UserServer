@@ -19,12 +19,11 @@ namespace UserService.DataAccess
     }
     public abstract class BaseDatabaseHelper:IDatabaseHelper
     {
-        public async Task<bool> CallStoredProcedureExec(string procedureName,DynamicParameters parameters)
+        public async Task<int> CallStoredProcedureExec(string procedureName,DynamicParameters parameters)
         {
             using (var dbConnection = GetConnection())
             {
-                var res = await dbConnection.ExecuteAsync(procedureName, parameters, commandType: System.Data.CommandType.StoredProcedure);
-                return res > 0;
+                return await dbConnection.ExecuteAsync(procedureName, parameters, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
         public async Task<IEnumerable<T>> CallStoredProcedureQuery<T>(string procedureName, DynamicParameters parameters)

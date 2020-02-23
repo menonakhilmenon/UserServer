@@ -7,7 +7,7 @@ namespace UserService.DataAccess
 {
     public interface IDatabaseHelper
     {
-        Task<bool> CallStoredProcedureExec(string procedureName, DynamicParameters parameters);
+        Task<int> CallStoredProcedureExec(string procedureName, DynamicParameters parameters);
         Task<IEnumerable<T>> CallStoredProcedureQuery<T>(string procedureName, DynamicParameters parameters);
         public IDbConnection GetConnection();
     }

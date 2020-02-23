@@ -8,7 +8,7 @@ using UserService.DataAccess;
 using JwtHelpers;
 using UserService.Models.Client;
 using UserService.Models;
-
+using UserService.DataAccess.CharacterManagement;
 
 namespace UserService.Controllers
 {
@@ -16,8 +16,8 @@ namespace UserService.Controllers
     public class ClientController : Controller
     {
         private readonly IGetCharacterData characterData;
-        private readonly ActiveCharacterManager activeCharacterManager;
-        public ClientController(IGetCharacterData characterData, ActiveCharacterManager activeCharacterManager)
+        private readonly CharacterSessionManager activeCharacterManager;
+        public ClientController(IGetCharacterData characterData, CharacterSessionManager activeCharacterManager)
         {
             this.characterData = characterData;
             this.activeCharacterManager = activeCharacterManager;
@@ -45,15 +45,22 @@ namespace UserService.Controllers
         {
             try 
             {
-                await activeCharacterManager.LoginCharacter(charID);
-                return Ok();
+                var res = await activeCharacterManager.LoginCharacter(HttpContext.GetUserIDFromJWTHeader(),charID);
+                if (res) 
+                {
+                    return Ok();
+                }
+                else 
+                {
+                    return Unauthorized();
+                }
             }
             catch (Exception e) 
             {
                 Console.WriteLine(e.ToString());
                 try 
                 {
-                    await activeCharacterManager.LogoutCharacter(charID);
+                    activeCharacterManager.LogoutUser(HttpContext.GetUserIDFromJWTHeader());
                 }
                 catch (Exception ie)
                 {
@@ -65,11 +72,11 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route(LocalClientRoutes.LOGOUT_ROUTE)]
-        public async Task<IActionResult> LogoutCharacter()
+        public IActionResult LogoutCharacter()
         {
             try
             {
-                await activeCharacterManager.LogoutUser(HttpContext.GetUserIDFromJWTHeader());
+                activeCharacterManager.LogoutUser(HttpContext.GetUserIDFromJWTHeader());
                 return Ok();
             }
             catch (Exception ie)
@@ -96,18 +103,18 @@ namespace UserService.Controllers
         {
             throw new NotImplementedException();
         }
-        [HttpPost]
-        [Route(LocalClientRoutes.MODIFY_CHAR_NAME_ROUTE)]
-        public IActionResult ChangeUserName(string name)
-        {
-            throw new NotImplementedException();
-        }
+
         [HttpPost]
         [Route(LocalClientRoutes.MODIFY_CHAR_VISUAL_ROUTE)]
         public IActionResult ChangeVisual(string charID,string characterVisualData)
         {
             throw new NotImplementedException();
         }
-
+        [HttpPost]
+        [Route(LocalClientRoutes.MODIFY_USER_NAME_ROUTE)]
+        public IActionResult ChangeUserName(string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -4,17 +4,18 @@ namespace UserService.DataAccess
 {
     public class CachedCharacter
     {
-        public CharacterFull character = null;
-        public bool nameChanged { get; set; }
-        public bool visualChanged { get; set; }
-        public bool dataChanged { get; set; }
-        public bool evicting { get; set; }
+        public CharacterFull _character = null;
+        public bool nameChanged { get; private set; }
+        public bool visualChanged { get; private set; }
+        public bool dataChanged { get; private set; }
+
         public CachedCharacter(CharacterFull character)
         {
-            this.character = character;
+            _character = character;
             nameChanged = false;
             visualChanged = false;
             dataChanged = false;
+            valueAccessed = false;
         }
 
         public string visualData
@@ -43,6 +44,24 @@ namespace UserService.DataAccess
                 character.characterGameData = value;
                 dataChanged = true;
             }
+        }
+        public bool evict => !(dataChanged || nameChanged || visualChanged || valueAccessed);
+        public bool valueAccessed { get; private set; }
+        public bool valueChanged => dataChanged || nameChanged || visualChanged;
+        public CharacterFull character 
+        {
+            get 
+            {
+                valueAccessed = true;
+                return _character;
+            } 
+        }
+        public void ResetEviction() 
+        {
+            valueAccessed = false;
+            dataChanged = false;
+            nameChanged = false;
+            visualChanged = false;
         }
     }
 }

@@ -21,18 +21,27 @@ namespace UserService.DataAccess
         }
         public async Task<bool> CreateCharacter(CharacterFull character)
         {
-            return await dbHelper.CallStoredProcedureExec("InsertCharacter",
-                new DynamicParameters().AddParameter("userID", JsonConvert.SerializeObject(character)));
+            return await dbHelper.CallStoredProcedureExec("CreateCharacter",
+                new DynamicParameters()
+                .AddParameter("charID", character.characterID)
+                .AddParameter("userID",character.userID)
+                .AddParameter("charName",character.characterName)
+                .AddParameter("charVisual",character.characterVisualData)
+                .AddParameter("charData",JsonConvert.SerializeObject(character.characterGameData))
+                ) > 0;
 
         }
         public async Task<bool> CreateUser(User user)
         {
-            return await dbHelper.CallStoredProcedureExec("InsertUser",
-                new DynamicParameters().AddParameter("userID", JsonConvert.SerializeObject(user)));
+            return await dbHelper.CallStoredProcedureExec("CreateUser",
+                new DynamicParameters()
+                .AddParameter("userID", user.userID)
+                .AddParameter("userName",user.userName)
+                .AddParameter("userData",JsonConvert.SerializeObject(user.userData))) > 0;
         }
         public async Task<IEnumerable<CharacterFull>> GetUserCharacters(string userID)
         {
-            var res = await dbHelper.CallStoredProcedureQuery<CharacterFull>("GetAllCharacterData",
+            var res = await dbHelper.CallStoredProcedureQuery<CharacterFull>("GetUserCharacters",
                 new DynamicParameters().AddParameter("userID", userID));
             foreach (var item in res)
             {
@@ -40,18 +49,20 @@ namespace UserService.DataAccess
             }
             return res;
         }
-        public async Task<User> GetUserInfo(string userID)
+        public async Task<User> GetUserData(string userID)
         {
             var res = (await dbHelper.CallStoredProcedureQuery<User>("GetUserData",
-                new DynamicParameters().AddParameter("userID", userID)))
+                new DynamicParameters()
+                .AddParameter("userID", userID)))
                 .FirstOrDefault();
             res.userID = userID;
             return res;
         }
-        public async Task<CharacterFull> GetCharacterInfo(string charID)
+        public async Task<CharacterFull> GetCharacterData(string charID)
         {
             var res = (await dbHelper.CallStoredProcedureQuery<CharacterFull>("GetCharacterData",
-                new DynamicParameters().AddParameter("userID", charID)))
+                new DynamicParameters()
+                .AddParameter("charID", charID)))
                 .FirstOrDefault();
             res.characterID = charID;
             return res;
@@ -60,31 +71,31 @@ namespace UserService.DataAccess
         {
             return await dbHelper.CallStoredProcedureExec("SetUserData",new DynamicParameters()
                 .AddParameter("userID", userID)
-                .AddParameter("userID", JsonConvert.SerializeObject(gameData)));
+                .AddParameter("userData", JsonConvert.SerializeObject(gameData))) > 0;
         }
-        public async Task<bool> SetCharacterVisualData(string userID, string visualData)
+        public async Task<bool> SetCharacterVisualData(string charID, string visualData)
         {
             return await dbHelper.CallStoredProcedureExec("SetCharacterVisualData", new DynamicParameters()
-                .AddParameter("userID", userID)
-                .AddParameter("userID", JsonConvert.SerializeObject(visualData)));
+                .AddParameter("charID", charID)
+                .AddParameter("charVisualData", visualData)) > 0;
         }
-        public async Task<bool> SetCharacterGameData(string userID, CharacterGameData gameData)
+        public async Task<bool> SetCharacterGameData(string charID, CharacterGameData gameData)
         {
             return await dbHelper.CallStoredProcedureExec("SetCharacterGameData", new DynamicParameters()
-                .AddParameter("userID", userID)
-                .AddParameter("userID", JsonConvert.SerializeObject(gameData)));
+                .AddParameter("charID", charID)
+                .AddParameter("charGameData", JsonConvert.SerializeObject(gameData))) > 0;
         }
         public async Task<bool> SetUserName(string userID, string name)
         {
             return await dbHelper.CallStoredProcedureExec("SetUserName", new DynamicParameters()
                 .AddParameter("userID", userID)
-                .AddParameter("userID", name));
+                .AddParameter("userName", name)) > 0;
         }
-        public async Task<bool> SetCharacterName(string userID, string name)
+        public async Task<bool> SetCharacterName(string charID, string name)
         {
             return await dbHelper.CallStoredProcedureExec("SetCharacterName", new DynamicParameters()
-                .AddParameter("userID", userID)
-                .AddParameter("userID", name));
+                .AddParameter("charID", charID)
+                .AddParameter("charName", name)) > 0;
         }
     }
 }
