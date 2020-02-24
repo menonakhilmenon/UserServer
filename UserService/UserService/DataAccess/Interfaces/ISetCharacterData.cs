@@ -7,7 +7,7 @@ namespace UserService.DataAccess
 {
     public interface ISetCharacterData
     {
-        Task<bool> SetUserData(string userID, UserGameData gameData);
+        Task<bool> SetUserData(string userID, UserData gameData);
         Task<bool> SetCharacterVisualData(string userID, string gameData);
         Task<bool> SetCharacterGameData(string userID, CharacterGameData gameData);
         Task<bool> SetUserName(string userID, string name);

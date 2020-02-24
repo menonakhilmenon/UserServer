@@ -23,7 +23,7 @@ namespace UserService.DataAccess.CharacterManagement
             if (activeCharacters.TryGetValue(userID, out var charID))
             {
                 activeCharacters.Remove(userID);
-                eventManager.InvokeEvent(Events.CHARACTER_LOGOUT_EVENT, charID);
+                eventManager.InvokeEvent(UserServiceEvents.CHARACTER_LOGOUT_EVENT, charID);
             }
         }
         public bool IsUserLoggedIn(string userID)
@@ -51,7 +51,7 @@ namespace UserService.DataAccess.CharacterManagement
             {
                 return false;
             }
-            eventManager.InvokeEvent(Events.CHARACTER_LOGIN_EVENT, charID);
+            eventManager.InvokeEvent(UserServiceEvents.CHARACTER_LOGIN_EVENT, charID);
             var user = res.character.userID;
             activeCharacters[user] = charID;
             return true;

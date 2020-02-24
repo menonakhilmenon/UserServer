@@ -40,6 +40,7 @@ namespace UserService.DataAccess
             }
         }
 
+        
         private async Task EvictFromCache(string charID) 
         {
             if(characters.TryGetValue(charID,out var res)) 
@@ -47,40 +48,45 @@ namespace UserService.DataAccess
                 await Task.Delay(CACHE_EVICTION_DELAY);
                 while (!res.evict)
                 {
-                    if (res.dataChanged)
-                    {
-                        if (!await characterDataSetter.SetCharacterGameData(charID, res.characterGameData))
-                        {
-                            Console.WriteLine("ERROR WRITING TO DATABASE");
-                            return;
-                        }
-                    }
-                    if (res.nameChanged)
-                    {
-                        if (!await characterDataSetter.SetCharacterName(charID, res.CharacterName))
-                        {
-                            Console.WriteLine("ERROR WRITING TO DATABASE");
-                            return;
-                        }
-                    }
-                    if (res.visualChanged)
-                    {
-                        if (!await characterDataSetter.SetCharacterVisualData(charID, res.visualData))
-                        {
-                            Console.WriteLine("ERROR WRITING TO DATABASE");
-                            return;
-                        }
-                    }
-                    if (res.valueAccessed && !res.valueChanged) 
-                    {
-                        res.ResetEviction();
-                    }
+                    await WriteToDB(res, charID);
                     await Task.Delay(CACHE_EVICTION_DELAY);
                 }
                 characters.Remove(charID);
             }
         }
 
+
+        private async Task WriteToDB(CachedCharacter res,string charID) 
+        {
+            if (res.dataChanged)
+            {
+                if (!await characterDataSetter.SetCharacterGameData(charID, res.characterGameData))
+                {
+                    Console.WriteLine("ERROR WRITING TO DATABASE");
+                    return;
+                }
+            }
+            if (res.nameChanged)
+            {
+                if (!await characterDataSetter.SetCharacterName(charID, res.CharacterName))
+                {
+                    Console.WriteLine("ERROR WRITING TO DATABASE");
+                    return;
+                }
+            }
+            if (res.visualChanged)
+            {
+                if (!await characterDataSetter.SetCharacterVisualData(charID, res.visualData))
+                {
+                    Console.WriteLine("ERROR WRITING TO DATABASE");
+                    return;
+                }
+            }
+            if (res.valueAccessed && !res.valueChanged)
+            {
+                res.ResetEviction();
+            }
+        }
 
         private CachedCharacter AddToCache(string charID,CharacterFull character) 
         {

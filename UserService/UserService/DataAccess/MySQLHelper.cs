@@ -5,7 +5,7 @@ using System.Data;
 
 namespace UserService.DataAccess
 {
-    public class MySQLHelper : BaseDatabaseHelper
+    public class MySQLHelper : BaseMySQLDatabaseHelper
     {
         private readonly DatabaseConfig databaseConfig;
 

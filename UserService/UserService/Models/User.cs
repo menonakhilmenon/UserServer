@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace UserService.Models
     {
         public string userID { get; set; }
         public string userName { get; set; }
-        public string userData { get; set; }
+
+        public UserData userData { get; set; }
     }
 }

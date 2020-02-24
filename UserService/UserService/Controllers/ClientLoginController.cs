@@ -13,14 +13,14 @@ using UserService.DataAccess.CharacterManagement;
 namespace UserService.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtExtensionsAndConstants.JwtAuthenticationScheme)]
-    public class ClientController : Controller
+    public class ClientLoginController : Controller
     {
         private readonly IGetCharacterData characterData;
-        private readonly CharacterSessionManager activeCharacterManager;
-        public ClientController(IGetCharacterData characterData, CharacterSessionManager activeCharacterManager)
+        private readonly CharacterSessionManager characterSessionManager;
+        public ClientLoginController(IGetCharacterData characterData, CharacterSessionManager characterSessionManager)
         {
             this.characterData = characterData;
-            this.activeCharacterManager = activeCharacterManager;
+            this.characterSessionManager = characterSessionManager;
         }
 
         [HttpPost]
@@ -45,7 +45,7 @@ namespace UserService.Controllers
         {
             try 
             {
-                var res = await activeCharacterManager.LoginCharacter(HttpContext.GetUserIDFromJWTHeader(),charID);
+                var res = await characterSessionManager.LoginCharacter(HttpContext.GetUserIDFromJWTHeader(),charID);
                 if (res) 
                 {
                     return Ok();
@@ -60,7 +60,7 @@ namespace UserService.Controllers
                 Console.WriteLine(e.ToString());
                 try 
                 {
-                    activeCharacterManager.LogoutUser(HttpContext.GetUserIDFromJWTHeader());
+                    characterSessionManager.LogoutUser(HttpContext.GetUserIDFromJWTHeader());
                 }
                 catch (Exception ie)
                 {
@@ -76,7 +76,7 @@ namespace UserService.Controllers
         {
             try
             {
-                activeCharacterManager.LogoutUser(HttpContext.GetUserIDFromJWTHeader());
+                characterSessionManager.LogoutUser(HttpContext.GetUserIDFromJWTHeader());
                 return Ok();
             }
             catch (Exception ie)
@@ -84,37 +84,6 @@ namespace UserService.Controllers
                 Console.WriteLine(ie.ToString());
                 return BadRequest();
             }
-        }
-        [HttpPost]
-        [Route(LocalClientRoutes.ADD_CHAR_ROUTE)]
-        public IActionResult AddCharacter(CharacterFull character)
-        {
-            throw new NotImplementedException();
-        }
-        [HttpPost]
-        [Route(LocalClientRoutes.REMOVE_CHAR_ROUTE)]
-        public IActionResult RemoveCharacter(string charID)
-        {
-            throw new NotImplementedException();
-        }
-        [HttpPost]
-        [Route(LocalClientRoutes.MODIFY_CHAR_NAME_ROUTE)]
-        public IActionResult ChangeCharacterName(string charID, string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpPost]
-        [Route(LocalClientRoutes.MODIFY_CHAR_VISUAL_ROUTE)]
-        public IActionResult ChangeVisual(string charID,string characterVisualData)
-        {
-            throw new NotImplementedException();
-        }
-        [HttpPost]
-        [Route(LocalClientRoutes.MODIFY_USER_NAME_ROUTE)]
-        public IActionResult ChangeUserName(string name)
-        {
-            throw new NotImplementedException();
         }
     }
 }

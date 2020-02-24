@@ -8,7 +8,7 @@ namespace UserService.DataAccess
 {
     public interface ICreateCharacter
     {
-        Task<bool> CreateCharacter(CharacterFull character);
+        Task<bool> CreateCharacter(CharacterFull character,User user);
         Task<bool> CreateUser(User character);
     }
 }

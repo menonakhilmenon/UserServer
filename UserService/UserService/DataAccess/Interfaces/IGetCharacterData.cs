@@ -7,8 +7,10 @@ namespace UserService.DataAccess
 {
     public interface IGetCharacterData
     {
-        Task<IEnumerable<CharacterFull>> GetUserCharacters(string userID);
         Task<CharacterFull> GetCharacterData(string charID);
+        Task<CharacterFull> GetCharacterByName(string charName);
         Task<User> GetUserData(string userID);
+        Task<User> GetUserByName(string userName);
+        Task<IEnumerable<CharacterFull>> GetUserCharacters(string userID);
     }
 }

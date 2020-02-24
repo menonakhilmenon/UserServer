@@ -13,6 +13,9 @@ using Microsoft.Extensions.Logging;
 using JwtHelpers;
 using UserService.DataAccess;
 using UserService.DataAccess.CharacterManagement;
+using Dapper;
+using static UserService.GlobalConstantsAndExtensions;
+using UserService.Models;
 
 namespace UserService
 {
@@ -65,9 +68,14 @@ namespace UserService
                     };
                 });
             services.AddAuthorization();
-
+            AddSqlMappings();
         }
 
+        private void AddSqlMappings()
+        {
+            SqlMapper.AddTypeHandler(typeof(CharacterGameData), new JsonTypeHandler());
+            SqlMapper.AddTypeHandler(typeof(UserData), new JsonTypeHandler());
+        }
 
         private void ConfigureBindings(IServiceCollection services) 
         {
@@ -75,9 +83,12 @@ namespace UserService
             services.AddSingleton(Configuration.GetSection("DatabaseConfig").Get<DatabaseConfig>());
             services.AddSingleton<IGetCharacterData, DatabaseCharacterAccesor>();
             services.AddSingleton<ISetCharacterData, DatabaseCharacterAccesor>();
+            services.AddSingleton<ICreateCharacter, DatabaseCharacterAccesor>();
+            services.AddSingleton<IDeleteCharacter, DatabaseCharacterAccesor>();
             services.AddSingleton<CharacterCache>();
             services.AddSingleton<CharacterSessionManager>();
             services.AddSingleton<CharacterModerationManager>();
+            services.AddSingleton<CharacterModificationManager>();
             services.AddSingleton<EventManager>();
         }
 
@@ -101,6 +112,7 @@ namespace UserService
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }
