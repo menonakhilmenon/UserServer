@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
-using UserService.Models.Client;
-using Dapper;
 using UserService.Models;
+using Dapper;
 using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace UserService.DataAccess
 {
@@ -31,7 +31,7 @@ namespace UserService.DataAccess
                         .AddParameter("charID", character.characterID)
                         .AddParameter("userID", character.userID)
                         .AddParameter("charName", character.characterName)
-                        .AddParameter("charVisual", character.characterVisualData)
+                        .AddParameter("charVisual", character.characterVisualData.ToString(Formatting.None))
                         .AddParameter("charData", JsonConvert.SerializeObject(character.characterGameData))
                         ) > 0;
                     if (!res1)
@@ -47,6 +47,7 @@ namespace UserService.DataAccess
                         connection.Close();
                         return false;
                     }
+                    transaction.Commit();
                     connection.Close();
                     return true;
                 }
@@ -101,11 +102,11 @@ namespace UserService.DataAccess
                 .AddParameter("userID", userID)
                 .AddParameter("userData", JsonConvert.SerializeObject(gameData))) > 0;
         }
-        public async Task<bool> SetCharacterVisualData(string charID, string visualData)
+        public async Task<bool> SetCharacterVisualData(string charID, JObject visualData)
         {
             return await dbHelper.CallStoredProcedureExec("SetCharacterVisualData", new DynamicParameters()
                 .AddParameter("charID", charID)
-                .AddParameter("charVisualData", visualData)) > 0;
+                .AddParameter("charVisualData", visualData.ToString(Formatting.None))) > 0;
         }
         public async Task<bool> SetCharacterGameData(string charID, CharacterGameData gameData)
         {
@@ -141,9 +142,10 @@ namespace UserService.DataAccess
                 using (var transaction = connection.BeginTransaction())
                 {
 
-                    var res1 = await dbHelper.CallStoredProcedureExec(connection, "DeleteCharacter", new DynamicParameters()
-                    .AddParameter("charID", characterID))
-                    > 0;
+                    var res = await dbHelper.CallStoredProcedureExec(connection, "DeleteCharacter", new DynamicParameters()
+                    .AddParameter("charID", characterID));
+                    Console.WriteLine(res);
+                    var res1 = res > 0;
                     if (!res1)
                     {
                         transaction.Rollback();
@@ -157,6 +159,7 @@ namespace UserService.DataAccess
                         connection.Close();
                         return false;
                     }
+                    transaction.Commit();
                     connection.Close();
                     return true;
                 }

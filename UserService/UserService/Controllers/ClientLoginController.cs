@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.DataAccess;
 using JwtHelpers;
-using UserService.Models.Client;
 using UserService.Models;
 using UserService.DataAccess.CharacterManagement;
 
@@ -24,7 +23,7 @@ namespace UserService.Controllers
         }
 
         [HttpPost]
-        [Route(LocalClientRoutes.GET_CHARACTERS_ROUTE)]
+        [Route(UserServiceRoutes.GET_CHARACTERS_ROUTE)]
         public async Task<IActionResult> GetCharacters()
         {
             try
@@ -40,7 +39,7 @@ namespace UserService.Controllers
         }
 
         [HttpPost]
-        [Route(LocalClientRoutes.LOGIN_CHAR_ROUTE)]
+        [Route(UserServiceRoutes.LOGIN_CHAR_ROUTE)]
         public async Task<IActionResult> SelectCharacter(string charID)
         {
             try 
@@ -71,7 +70,7 @@ namespace UserService.Controllers
         }
 
         [HttpPost]
-        [Route(LocalClientRoutes.LOGOUT_ROUTE)]
+        [Route(UserServiceRoutes.LOGOUT_ROUTE)]
         public IActionResult LogoutCharacter()
         {
             try

@@ -1,4 +1,5 @@
-﻿using UserService.Models;
+﻿using Newtonsoft.Json.Linq;
+using UserService.Models;
 
 namespace UserService.DataAccess
 {
@@ -18,7 +19,7 @@ namespace UserService.DataAccess
             valueAccessed = false;
         }
 
-        public string visualData
+        public JObject visualData
         {
             get => character.characterVisualData;
             set

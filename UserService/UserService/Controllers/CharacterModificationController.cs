@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using JwtHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using UserService.DataAccess.CharacterManagement;
-using UserService.Models.Client;
+using UserService.Models;
 
 namespace UserService.Controllers
 {
@@ -21,7 +22,7 @@ namespace UserService.Controllers
         }
 
         [HttpPost]
-        [Route(LocalClientRoutes.MODIFY_CHAR_NAME_ROUTE)]
+        [Route(UserServiceRoutes.MODIFY_CHAR_NAME_ROUTE)]
         public async Task<IActionResult> ChangeCharacterName(string charID, string name)
         {
             var res = await characterModificationManager.ChangeCharacterName(HttpContext.GetUserIDFromJWTHeader(),charID, name);
@@ -29,13 +30,13 @@ namespace UserService.Controllers
         }
 
         [HttpPost]
-        [Route(LocalClientRoutes.MODIFY_CHAR_VISUAL_ROUTE)]
-        public async Task<IActionResult> ChangeVisual(string charID, string characterVisualData)
+        [Route(UserServiceRoutes.MODIFY_CHAR_VISUAL_ROUTE)]
+        public async Task<IActionResult> ChangeVisual(string charID, JObject characterVisualData)
         {
             return Ok(await characterModificationManager.ChangeCharacterVisual(HttpContext.GetUserIDFromJWTHeader(), charID, characterVisualData));
         }
         [HttpPost]
-        [Route(LocalClientRoutes.MODIFY_USER_NAME_ROUTE)]
+        [Route(UserServiceRoutes.MODIFY_USER_NAME_ROUTE)]
         public async Task<IActionResult> ChangeUserName(string name)
         {
             return Ok(await characterModificationManager.ChangeUserName(HttpContext.GetUserIDFromJWTHeader(), name));

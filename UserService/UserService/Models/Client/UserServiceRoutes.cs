@@ -1,8 +1,12 @@
-﻿namespace UserService.Models.Client
+﻿namespace UserService.Models
 {
-    public static class LocalClientRoutes
+    public static class UserServiceRoutes
     {
-        //For local player login/logout
+        //For remote player get character info
+        public const string GET_CHARACTER_INFO = "GetCharacter";
+
+        //For local player login/logout 
+
         public const string GET_CHARACTERS_ROUTE = "GetCharacters";
         public const string LOGIN_CHAR_ROUTE = "LoginCharacter";
         public const string LOGOUT_ROUTE = "LogoutCharacter";

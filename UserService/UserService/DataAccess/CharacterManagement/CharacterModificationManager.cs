@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace UserService.DataAccess.CharacterManagement
             }
             return false;
         }
-        public async Task<bool> ChangeCharacterVisual(string userID,string charID,string charVisual) 
+        public async Task<bool> ChangeCharacterVisual(string userID,string charID, JObject charVisual) 
         {
             var character = await characterCache.GetCharacter(charID);
             if (character != null) 

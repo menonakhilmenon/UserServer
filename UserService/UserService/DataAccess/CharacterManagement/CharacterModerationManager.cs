@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace UserService.DataAccess.CharacterManagement
         }
 
 
-        public async Task<bool> CreateCharacter(string userID,string charName,string visualData)
+        public async Task<bool> CreateCharacter(string userID,string charName,JObject visualData)
         {
             var user = await getCharacterData.GetUserData(userID);
             if(user == null) 

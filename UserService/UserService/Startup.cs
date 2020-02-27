@@ -1,21 +1,17 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using JwtHelpers;
 using UserService.DataAccess;
 using UserService.DataAccess.CharacterManagement;
 using Dapper;
-using static UserService.GlobalConstantsAndExtensions;
 using UserService.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace UserService
 {
@@ -39,8 +35,7 @@ namespace UserService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-
+            services.AddControllers().AddNewtonsoftJson();
 
             var trustedCerts = Configuration.GetSection("TrustedCertificates").Get<List<string>>();
             var jwtConfig = Configuration.GetSection("Jwt").Get<JwtConfig>();
@@ -73,8 +68,10 @@ namespace UserService
 
         private void AddSqlMappings()
         {
-            SqlMapper.AddTypeHandler(typeof(CharacterGameData), new JsonTypeHandler());
-            SqlMapper.AddTypeHandler(typeof(UserData), new JsonTypeHandler());
+            var typeHandler = new JsonTypeHandler();
+            SqlMapper.AddTypeHandler(typeof(CharacterGameData), typeHandler);
+            SqlMapper.AddTypeHandler(typeof(UserData), typeHandler);
+            SqlMapper.AddTypeHandler(typeof(JObject), new JsonObjectHandler());
         }
 
         private void ConfigureBindings(IServiceCollection services) 

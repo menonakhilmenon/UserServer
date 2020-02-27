@@ -4,7 +4,7 @@ using JwtHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.DataAccess.CharacterManagement;
-using UserService.Models.Client;
+using UserService.Models;
 
 namespace UserService.Controllers
 {
@@ -19,7 +19,7 @@ namespace UserService.Controllers
         }
 
         [HttpPost]
-        [Route(LocalClientRoutes.ADD_USER_ROUTE)]
+        [Route(UserServiceRoutes.ADD_USER_ROUTE)]
         public async Task<IActionResult> CreateUser(string name)
         {
             try
@@ -33,12 +33,13 @@ namespace UserService.Controllers
             }
         }
         [HttpPost]
-        [Route(LocalClientRoutes.ADD_CHAR_ROUTE)]
-        public async Task<IActionResult> AddCharacter(string charName,string visualData)
+        [Route(UserServiceRoutes.ADD_CHAR_ROUTE)]
+        public async Task<IActionResult> AddCharacter([FromBody]NewCharacter character)
         {
             try 
             {
-                var res = await characterModerationManager.CreateCharacter(HttpContext.GetUserIDFromJWTHeader(), charName, visualData);
+                Console.WriteLine(character.characterVisualData.ToString(Newtonsoft.Json.Formatting.None));
+                var res = await characterModerationManager.CreateCharacter(HttpContext.GetUserIDFromJWTHeader(), character.characterName, character.characterVisualData);
                 return Ok(res);
             }
             catch (Exception e)
@@ -48,7 +49,7 @@ namespace UserService.Controllers
             }
         }
         [HttpPost]
-        [Route(LocalClientRoutes.REMOVE_CHAR_ROUTE)]
+        [Route(UserServiceRoutes.REMOVE_CHAR_ROUTE)]
         public async Task<IActionResult> RemoveCharacter(string charID)
         {
             try 
@@ -63,7 +64,7 @@ namespace UserService.Controllers
             }
         }
         [HttpPost]
-        [Route(LocalClientRoutes.REMOVE_USER_ROUTE)]
+        [Route(UserServiceRoutes.REMOVE_USER_ROUTE)]
         public async Task<IActionResult> RemoveUser(string userID)
         {
             try
