@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UserService.Models;
 
 namespace UserService.DataAccess.CharacterManagement
 {
@@ -35,7 +36,17 @@ namespace UserService.DataAccess.CharacterManagement
             return activeCharacters.ContainsValue(charID);
         }
 
-        public string GetActiveCharacter(string userID)
+        public async Task<CharacterFull> GetActiveCharacter(string userID) 
+        {
+            var resID = GetActiveCharacterID(userID);
+            if (string.IsNullOrEmpty(resID)) 
+            {
+                return null;
+            }
+            return (await characterCache.GetCharacter(resID)).character;
+        }
+
+        public string GetActiveCharacterID(string userID)
         {
             if (activeCharacters.ContainsKey(userID))
             {

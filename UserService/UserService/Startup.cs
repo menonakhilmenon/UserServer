@@ -12,6 +12,7 @@ using Dapper;
 using UserService.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UserService.Services;
 
 namespace UserService
 {
@@ -36,6 +37,8 @@ namespace UserService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddNewtonsoftJson();
+
+            services.AddGrpc();
 
             var trustedCerts = Configuration.GetSection("TrustedCertificates").Get<List<string>>();
             var jwtConfig = Configuration.GetSection("Jwt").Get<JwtConfig>();
@@ -108,6 +111,7 @@ namespace UserService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<UserManagementService>();
             });
 
         }

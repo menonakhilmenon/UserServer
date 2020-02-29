@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "UserService.Protos";
+
+service UserManagement{
+	rpc GetLoggedInUser (UserInfo) returns (CharacterInfo);
+	rpc SaveUserData (CharacterInfo) returns (Empty);
+}
+message UserInfo{
+	string userID=1;
+}
+message CharacterInfo{
+	string charID=1;
+	string charData=2;
+}
+message Empty{
+}
