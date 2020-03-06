@@ -28,7 +28,7 @@ namespace UserService.Services
             var res = await characterSessionManager.GetActiveCharacter(request.UserID);
             if(res == null) 
             {
-                return null;
+                return new CharacterInfo();
             }
             else 
             {

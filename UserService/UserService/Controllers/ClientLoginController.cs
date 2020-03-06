@@ -40,11 +40,11 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route(UserServiceRoutes.LOGIN_CHAR_ROUTE)]
-        public async Task<IActionResult> SelectCharacter(string charID)
+        public async Task<IActionResult> LoginCharacter([FromBody]CharacterLoginRequest charRequest)
         {
             try 
             {
-                var res = await characterSessionManager.LoginCharacter(HttpContext.GetUserIDFromJWTHeader(),charID);
+                var res = await characterSessionManager.LoginCharacter(HttpContext.GetUserIDFromJWTHeader(),charRequest.charID);
                 if (res) 
                 {
                     return Ok();
