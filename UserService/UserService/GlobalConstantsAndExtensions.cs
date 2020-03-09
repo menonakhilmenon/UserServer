@@ -44,12 +44,23 @@ namespace UserService
     {
         public object Parse(Type destinationType, object value)
         {
+            if(value == null || value.ToString() == "null") 
+            {
+                return null;
+            }
             return JObject.Parse(value.ToString());
         }
 
         public void SetValue(IDbDataParameter parameter, object value)
         {
-            throw new NotImplementedException();
+            if (value == null || value.ToString() == "null")
+            {
+                parameter.Value = "null";
+            }
+            else 
+            {
+                parameter.Value = JsonConvert.SerializeObject(value);
+            }
         }
     }
 }

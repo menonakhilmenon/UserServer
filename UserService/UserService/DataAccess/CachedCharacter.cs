@@ -37,7 +37,7 @@ namespace UserService.DataAccess
                 nameChanged = true;
             }
         }
-        public CharacterGameData characterGameData
+        public JObject characterGameData
         {
             get => character.characterGameData;
             set

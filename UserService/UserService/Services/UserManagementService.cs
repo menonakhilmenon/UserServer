@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace UserService.Services
         {
 
             var cachedCharacter = await characterCache.GetCharacter(request.CharID);
-            cachedCharacter.characterGameData = JsonConvert.DeserializeObject<CharacterGameData>(request.CharData);
+            cachedCharacter.characterGameData = JsonConvert.DeserializeObject<JObject>(request.CharData);
             eventManager.InvokeEvent(UserServiceEvents.CHARACTER_CHANGE_EVENT, request.CharID);
 
             return new Empty();

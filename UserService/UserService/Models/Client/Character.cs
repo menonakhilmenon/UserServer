@@ -13,7 +13,7 @@ namespace UserService.Models
         public string characterName { get; set; }
         public JObject characterVisualData { get; set; }
         public string characterID { get; set; }
-        public CharacterGameData characterGameData { get; set; }
+        public JObject characterGameData { get; set; }
         public string userID { get; set; }
     }
     public class NewCharacter 

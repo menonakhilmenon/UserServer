@@ -72,7 +72,6 @@ namespace UserService
         private void AddSqlMappings()
         {
             var typeHandler = new JsonTypeHandler();
-            SqlMapper.AddTypeHandler(typeof(CharacterGameData), typeHandler);
             SqlMapper.AddTypeHandler(typeof(UserData), typeHandler);
             SqlMapper.AddTypeHandler(typeof(JObject), new JsonObjectHandler());
         }

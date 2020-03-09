@@ -108,7 +108,7 @@ namespace UserService.DataAccess
                 .AddParameter("charID", charID)
                 .AddParameter("charVisualData", visualData.ToString(Formatting.None))) > 0;
         }
-        public async Task<bool> SetCharacterGameData(string charID, CharacterGameData gameData)
+        public async Task<bool> SetCharacterGameData(string charID, JObject gameData)
         {
             return await dbHelper.CallStoredProcedureExec("SetCharacterGameData", new DynamicParameters()
                 .AddParameter("charID", charID)

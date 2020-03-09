@@ -44,7 +44,6 @@ namespace UserService.DataAccess.CharacterManagement
                     characterVisualData = visualData,
                     userID = userID,
                     characterName = charName,
-                    characterGameData = new CharacterGameData(),
                     characterID = guid
                 };
                 user.userData.characterCreationLimit--;
